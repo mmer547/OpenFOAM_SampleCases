@@ -1,0 +1,21 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+touch post.foam
+
+./tetgen backStep.stl -kpq1.1 -a0.005
+
+runApplication tetgenToFoam backStep.1
+
+runApplication transformPoints -scale 0.001
+
+runApplication checkMesh
+
+runApplication autoPatch 90 -overwrite
+
+runApplication createPatch -overwrite
+
+
+#------------------------------------------------------------------------------
