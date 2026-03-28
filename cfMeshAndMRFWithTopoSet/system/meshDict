@@ -1,0 +1,102 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                |
+| \\      /  F ield         | cfMesh: A library for mesh generation          | 
+|  \\    /   O peration     |                                                |
+|   \\  /    A nd           | Author: Franjo Juretic                         | 
+|    \\/     M anipulation  | E-mail: franjo.juretic@c-fields.com            |
+\*---------------------------------------------------------------------------*/
+
+FoamFile
+{
+    version   2.0;
+    format    ascii;
+    class     dictionary;
+    location  "system";
+    object    meshDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+surfaceFile "cadouter.fms";
+
+// ドメイン全体のセル上限。ここが粗いと、localRefinement 未指定の場所では 0.01 より大きくなり得る。
+maxCellSize 0.2;
+
+boundaryCellSize 0.1;
+
+// cellZone「rotor」は topoSet で付与する想定。
+// refinementSources: STL 表面付近の細分化。STL はケース直下の mrf_geometry.stl。
+// 再メッシュ後は topoSet を再実行すること。
+refinementSources
+{
+    "mrf_geometry.stl"
+    {
+        cellSize    0.001;
+    }
+}
+
+// objectRefinement type surface は未対応のため primitive を使用。
+// type cone: 軸は p0→p1、両端半径 radius0 / radius1。円筒にするには両半径を同じにする。
+// 寸法は mrf_geometry.stl の概算（軸は z、半径約 0.3）。必要に応じ p0/p1/半径を調整。
+objectRefinements
+{
+    mrf_geometry_cylinder
+    {
+        type        cone;
+        cellSize    0.01;
+        p0          (0 0 -0.012);
+        p1          (0 0  0.512);
+        radius0     0.305;
+        radius1     0.305;
+    }
+}
+
+// keepCellsIntersectingPatches
+// {
+//     "mrf_*"
+//     {
+//         keepCells 1;
+//     }
+// }
+
+// メッシュ生成時に cellZone まで付けたい場合は cellZones ブロック等を参照（topoSet と二重にしないこと）。
+// cellZones
+// {
+//     rotor
+//     {
+//         type            surface;
+//         surfaceFile     "mrf_geometry.stl";
+//         selectionMode   inside;
+//     }
+// }
+
+// 入力表面（cadouter.fms）のパッチ名に対応。ここに無いパッチ付近は maxCellSize 側に寄りやすい。
+localRefinement
+{
+    inlet
+    {
+        cellSize 0.01;
+    }
+    outlet
+    {
+        cellSize 0.01;
+    }
+    wall
+    {
+        cellSize 0.01;
+    }
+    mrf_outer
+    {
+        cellSize 0.01;
+    }
+    rot
+    {
+        cellSize 0.01;
+    }
+    bottom
+    {
+        cellSize 0.01;
+    }
+}
+ 
+// ************************************************************************* //

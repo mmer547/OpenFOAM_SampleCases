@@ -1,0 +1,48 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| 既存メッシュに対し STL 内のセルを cellZone「rotor」にする（OpenFOAM v2412） |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    object      topoSetDict;
+}
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+actions
+(
+    // 1) STL 閉曲面の「内側」のセルを cellSet に集める
+    //    表面ファイルは constant/triSurface/ に置く（例: mrf_geometry.stl）
+    //    outsidePoints: STL の外側にあることが確実な点を1点以上。
+    //    メッシュ範囲外・計算域の外周など、ロータ包絡の外の座標に合わせて修正すること。
+    {
+        name            rotorCells;
+        type            cellSet;
+        action          new;
+        source          surfaceToCell;
+        file            "mrf_geometry.stl";
+        outsidePoints
+        (
+            (10 10 10)
+        );
+        includeCut      false;
+        includeInside   true;
+        includeOutside  false;
+        nearDistance    1e-9;
+        curvature       -1;
+        useSurfaceOrientation true;
+    }
+
+    // 2) cellSet → cellZone（名前は constant/MRFProperties の cellZone と一致させる）
+    {
+        name            rotor;
+        type            cellZoneSet;
+        action          new;
+        source          setToCellZone;
+        set             rotorCells;
+    }
+);
+
+// ************************************************************************* //
