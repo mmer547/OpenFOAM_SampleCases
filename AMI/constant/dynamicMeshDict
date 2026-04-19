@@ -1,0 +1,26 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "constant";
+    object      dynamicMeshDict;
+}
+mover
+{
+  type motionSolver;
+  libs ("libfvMeshMovers.so" "libfvMotionSolvers.so");
+  motionSolver motionSolverList;
+  solvers
+  {
+    dynamicMeshCellZone0
+    {
+      motionSolver solidBody;
+      cellZone dynamicMeshCellZone0;
+      solidBodyMotionFunction rotatingMotion;
+      origin (0.0 0.0 -0.05);
+      axis (0.0 0.0 1.0);
+      omega constant 753.98;//[rad/s]
+    }
+  }
+}

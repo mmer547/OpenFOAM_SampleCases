@@ -1,0 +1,46 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volScalarField;
+    location    0;
+    object      k;
+}
+dimensions [0 2 -2 0 0 0 0];
+internalField uniform 0.001;
+boundaryField
+{
+    #includeEtc "caseDicts/setConstraintTypes"
+    inlet
+    {
+        type fixedValue;
+        value uniform 0.001;
+    }
+    wall
+    {
+        type kqRWallFunction;
+        value uniform 0.0;
+    }
+    outlet
+    {
+        type zeroGradient;
+    }
+    bottom
+    {
+        type kqRWallFunction;
+        value uniform 0.0;
+    }
+    rot
+    {
+        type kqRWallFunction;
+        value uniform 0.0;
+    }
+    buffle0
+    {
+        type zeroGradient;
+    }
+    defaultFaces
+    {
+        type zeroGradient;
+    }
+}

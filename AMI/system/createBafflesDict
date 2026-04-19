@@ -1,0 +1,29 @@
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       dictionary;
+    location    "system";
+    object      createBafflesDict;
+}
+internalFacesOnly true;
+baffles
+{
+  buffle0
+  {
+    type faceZone;
+    zoneName dynamicMeshFaceZone0;
+    owner
+    {
+      name buffle0_primary;
+      type patch;
+      neighbourPatch buffle0_secondary;
+    }
+    neighbour
+    {
+      name buffle0_secondary;
+      type patch;
+      neighbourPatch buffle0_primary;
+    }
+  }
+}
