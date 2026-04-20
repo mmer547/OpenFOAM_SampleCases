@@ -1,0 +1,67 @@
+/*--------------------------------*- C++ -*----------------------------------*\
+| =========                 |                                                 |
+| \\      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \\    /   O peration     | Version:  v2412                                 |
+|   \\  /    A nd           | Website:  www.openfoam.com                      |
+|    \\/     M anipulation  |                                                 |
+\*---------------------------------------------------------------------------*/
+FoamFile
+{
+    version     2.0;
+    format      ascii;
+    class       volVectorField;
+    object      U;
+}
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
+
+dimensions      [0 1 -1 0 0 0 0];
+
+internalField   uniform (0 0 0);
+
+boundaryField
+{
+    inlet
+    {
+        type                flowRateInletVelocity;
+        volumetricFlowRate  constant 0.01;   // ここを指定値に
+        value               uniform (0 0 0);
+    }
+
+    outlet
+    {
+        type            pressureInletOutletVelocity;
+        inletValue      uniform (0 0 0);
+        value           uniform (0 0 0);
+    }
+
+    bottom
+    {
+        type            noSlip;
+    }
+
+    rot
+    {
+        type            movingWallVelocity;
+        value           uniform (0 0 0);
+    }
+
+    mrf_outer
+    {
+        type            cyclicAMI;
+        value           uniform (0 0 0);
+    }
+
+    mrf_inner
+    {
+        type            cyclicAMI;
+        value           uniform (0 0 0);
+    }
+
+    wall
+    {
+        type            noSlip;
+    }
+}
+
+
+// ************************************************************************* //

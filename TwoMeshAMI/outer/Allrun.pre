@@ -1,0 +1,4 @@
+#!/bin/sh
+
+surfaceFeatureEdges cadouter.stl cadouter.fms
+cartesianMesh

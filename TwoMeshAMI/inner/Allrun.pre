@@ -1,0 +1,4 @@
+#!/bin/sh
+
+surfaceFeatureEdges cadinner.stl cadinner.fms
+cartesianMesh

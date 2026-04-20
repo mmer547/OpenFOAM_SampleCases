@@ -1,0 +1,24 @@
+#!/bin/sh
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+touch post.foam
+
+rm -rf constant/polyMesh processor*
+
+( cd inner && ./Allrun.pre )
+( cd outer && ./Allrun.pre )
+
+cp -r outer/constant/polyMesh constant/polyMesh
+
+runApplication mergeMeshes . inner -overwrite
+
+runApplication changeDictionary
+
+runApplication topoSet
+
+restore0Dir
+
+runApplication decomposePar -force
+
+#------------------------------------------------------------------------------
